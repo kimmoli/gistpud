@@ -28,7 +28,8 @@ ApplicationWindow
 
         Component.onCompleted:
         {
-            processing = false
+            processing = true
+            gists.fetchGists()
         }
 
         onError:
@@ -48,16 +49,18 @@ ApplicationWindow
                 var description = gistsJson[i].description
                 var html_url = gistsJson[i].html_url
                 var created_at = gistsJson[i].created_at
+                var updated_at = gistsJson[i].updated_at
                 var files = gistsJson[i].files
                 for (var f in files)
                 {
-                    var filename = files[f].filename
-                    var raw_url = files[f].raw_url
                     gistsList.append( { description: description,
                                         html_url: html_url,
                                         created_at: created_at,
-                                        filename: filename,
-                                        raw_url: raw_url } )
+                                        updated_at: updated_at,
+                                        filename: files[f].filename,
+                                        language: files[f].language,
+                                        size: files[f].size,
+                                        raw_url: files[f].raw_url } )
                 }
             }
             processing = false

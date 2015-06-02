@@ -3,7 +3,9 @@ import Sailfish.Silica 1.0
 
 Page
 {
-    id: pasteInfoPage
+    id: gistInfoPage
+
+    property var thisGist
 
     SilicaFlickable
     {
@@ -15,44 +17,39 @@ Page
         {
             id: column
 
-            width: pasteInfoPage.width
+            width: gistInfoPage.width
             spacing: Theme.paddingLarge
+
             PageHeader
             {
-                title: currentPasteTitle
+                title: thisGist.filename
             }
+
+            DetailItem
+            {
+                label: "Part of Gist"
+                value: thisGist.description
+            }
+
             DetailItem
             {
                 label: "Created"
-                value: currentPasteDate
+                value: Qt.formatDateTime(new Date(thisGist.created_at))
             }
             DetailItem
             {
-                label: "Expires"
-                value: currentPasteExpire
+                label: "Updated"
+                value: Qt.formatDateTime(new Date(thisGist.updated_at))
             }
             DetailItem
             {
-                label: "Privacy"
-                value:
-                {
-                    if (currentPastePrivacy == 0)
-                        return "Public"
-                    if (currentPastePrivacy == 1)
-                        return "Unlisted"
-                    if (currentPastePrivacy == 2)
-                        return "Private"
-                }
-            }
-            DetailItem
-            {
-                label: "Format"
-                value: currentPasteFormat
+                label: "Language"
+                value: thisGist.language
             }
             DetailItem
             {
                 label: "Size"
-                value: currentPasteSize + " B"
+                value: thisGist.size + " B"
             }
         }
     }

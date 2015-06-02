@@ -32,47 +32,14 @@ Page
             }
         }
 
-        Column
-        {
-            id: col
-            width: parent.width
-            anchors.top: parent.top
-            anchors.topMargin: Theme.paddingLarge
-
-            Button
-            {
-                id: b1
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "zen"
-                onClicked:
-                {
-                    processing = true
-                    gists.fetchZen()
-                }
-            }
-            Button
-            {
-                id: b2
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "gists"
-                onClicked:
-                {
-                    processing = true
-                    gists.fetchGists()
-                }
-            }
-        }
-
-
         SilicaListView
         {
             id: listView
-            anchors.top: col.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
-            height: parent.height - col.height - Theme.paddingLarge
+            anchors.fill: parent
 
             model: gistsList
+
+            header: PageHeader { title: "Your Gists" }
 
             VerticalScrollDecorator {}
 
@@ -95,7 +62,12 @@ Page
 
                 onClicked:
                 {
-                    pageStack.push(Qt.resolvedUrl("ShowGist.qml"), { raw_url: raw_url, filename: filename } )
+                    pageStack.push(Qt.resolvedUrl("ShowGist.qml"),
+                                   {
+                                       raw_url: raw_url,
+                                       filename: filename
+                                   } )
+                    pageStack.pushAttached(Qt.resolvedUrl("GistInfo.qml"), { thisGist: listView.model.get(index) } )
                 }
 
                 Column

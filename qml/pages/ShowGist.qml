@@ -3,19 +3,24 @@ import Sailfish.Silica 1.0
 
 Page
 {
-    id: showPastePage
+    id: showGistPage
 
     property string raw_url: ""
     property string filename: ""
+    property bool changed: false
 
-    Component.onCompleted:
+    function loadRaw()
     {
+        processing = true
+        area.text = "Loading..."
+
         var doc = new XMLHttpRequest();
         doc.onreadystatechange = function()
         {
             if (doc.readyState == XMLHttpRequest.DONE)
             {
                 area.text = doc.responseText;
+                processing = false
             }
         }
         doc.open("get", raw_url);
@@ -23,16 +28,41 @@ Page
         doc.send();
     }
 
+    Component.onCompleted:
+    {
+        loadRaw()
+    }
+
     SilicaFlickable
     {
         id: flick
         anchors.fill: parent
+        contentHeight: col.height
 
-        contentHeight: area.height
         VerticalScrollDecorator { flickable: flick }
 
         PullDownMenu
         {
+            MenuItem
+            {
+                text: area.readOnly ? "Edit" : "Revert changes"
+                onClicked:
+                {
+                    if (area.readOnly)
+                    {
+                        area.readOnly = false
+                        area.focus = true
+                    }
+                    else
+                    {
+                        area.readOnly = true
+                        area.focus = false
+                        if (changed) /* Reload only if changed */
+                            loadRaw()
+                        changed = false
+                    }
+                }
+            }
             MenuItem
             {
                 text: "Save to file"
@@ -53,27 +83,45 @@ Page
                 text: "Copy to clipboard"
                 onClicked: Clipboard.text = area.text
             }
+            MenuItem
+            {
+                text: "Upload to github"
+                enabled: changed
+                onClicked: messagebox.showError("sure, not yet")
+            }
         }
 
-        PageHeader
+        Column
         {
-            id: dh
-            title: filename
-        }
+            id: col
+            width: showGistPage.width
+            Label
+            {
+                id: dh
+                text: filename + (changed ? "*" : "")
+                width: parent.width - 2*Theme.horizontalPageMargin
+                anchors.horizontalCenter: parent.horizontalCenter
+                truncationMode: TruncationMode.Fade
+                color: Theme.highlightColor
+                height: Theme.itemSizeLarge
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignRight
+                font.pixelSize: Theme.fontSizeLarge
+                font.family: Theme.fontFamilyHeading
+                font.bold: changed
+            }
 
-        TextArea
-        {
-            id: area
-            width: showPastePage.width
-            height: showPastePage.height - dh.height
+            TextArea
+            {
+                id: area
+                width: showGistPage.width
+                height: Math.max(showGistPage.height - dh.height, implicitHeight)
 
-            anchors.top: dh.bottom
-
-            selectionMode: TextEdit.SelectCharacters
-            readOnly: true
-            background: null
-
-            text: "wait for it..."
+                selectionMode: TextEdit.SelectCharacters
+                readOnly: true
+                background: null
+                onTextChanged: if (!readOnly) changed = true
+            }
         }
     }
 }

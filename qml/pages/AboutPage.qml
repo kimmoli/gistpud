@@ -49,6 +49,11 @@ Page
                     visible: imagelocation.length > 0
                     source: imagelocation
                     anchors.centerIn: parent
+                    MouseArea
+                    {
+                        anchors.fill: parent
+                        onClicked: gists.fetchZen()
+                    }
                 }
             }
 

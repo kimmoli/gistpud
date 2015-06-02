@@ -48,6 +48,7 @@ Dialog
             TextField
             {
                 id: ti
+                text: filename
                 width: parent.width
                 focus: true
                 placeholderText: qsTr("Enter filename")

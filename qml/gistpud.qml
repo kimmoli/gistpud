@@ -29,6 +29,7 @@ ApplicationWindow
         Component.onCompleted:
         {
             processing = true
+            gists.registerToDBus()
             gists.fetchGists()
         }
 

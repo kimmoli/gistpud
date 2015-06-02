@@ -114,7 +114,7 @@ Page
                     }
                     Label
                     {
-                        text: Qt.formatDateTime(new Date(created_at))
+                        text: Qt.formatDateTime(new Date(updated_at))
                         font.pixelSize: Theme.fontSizeExtraSmall
                         color: listItem.highlighted ? Theme.highlightColor : Theme.secondaryColor
                     }

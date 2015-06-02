@@ -8,7 +8,7 @@ class consolereader : public QObject
 {
     Q_OBJECT
 public:
-    explicit consolereader(QString title = "Pasted from Jolla", QString expire = "1M", QObject *parent = 0);
+    explicit consolereader(QString filename = "unnamed", QObject *parent = 0);
     ~consolereader();
 
     bool running;
@@ -21,9 +21,9 @@ public slots:
     void error();
 
 public:
-    QString _title;
-    QString _expire;
+    QString _filename;
     QString _buffer;
+    Gists *gists;
 
 };
 

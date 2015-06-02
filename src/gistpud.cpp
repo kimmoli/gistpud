@@ -26,12 +26,12 @@ int main(int argc, char *argv[])
         {
             QCoreApplication* capp;
             capp = new QCoreApplication(argc, argv);
-            QString title("Gist from Jolla");
+            QString filename("unnamed");
 
             if (argc > 2)
-                title = QString(argv[2]);
+                filename = QString(argv[2]);
 
-            consolereader *c = new consolereader(title);
+            consolereader *c = new consolereader(filename);
 
             capp->connect(c, SIGNAL(quit()), capp, SLOT(quit()));
 

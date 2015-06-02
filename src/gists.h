@@ -41,6 +41,8 @@ public:
 
     Q_INVOKABLE void fetchZen();
     Q_INVOKABLE void fetchGists();
+    Q_INVOKABLE void postGist(QString json);
+    Q_INVOKABLE void updateGist(QString id, QString json);
 
     Q_INVOKABLE bool fileExists(QString filename);
     Q_INVOKABLE bool save(QString filename, QString data);
@@ -61,6 +63,7 @@ signals:
     void usernameChanged();
     void gistsChanged();
     void error();
+    void success();
 
 private slots:
     void finished(QNetworkReply *reply);

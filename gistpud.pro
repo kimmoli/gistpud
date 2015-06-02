@@ -27,8 +27,8 @@ OTHER_FILES += qml/gistpud.qml \
     harbour-gistpud.png \
     harbour-gistpud.desktop \
     qml/components/Messagebox.qml \
-    qml/pages/ShowGist.qml \
-    qml/pages/EditGist.qml \
     qml/pages/GistInfo.qml \
     qml/pages/LoginPage.qml \
-    qml/pages/AskFilename.qml
+    qml/pages/AskFilename.qml \
+    qml/pages/AskGistDetails.qml \
+    qml/pages/GistEditor.qml

@@ -38,6 +38,12 @@ ApplicationWindow
             messagebox.showError(gists.getError())
         }
 
+        onSuccess:
+        {
+            processing = true
+            gists.fetchGists()
+        }
+
         onGistsChanged:
         {
             gistsList.clear()
@@ -46,21 +52,18 @@ ApplicationWindow
 
             for (var i in gistsJson)
             {
-                var description = gistsJson[i].description
-                var html_url = gistsJson[i].html_url
-                var created_at = gistsJson[i].created_at
-                var updated_at = gistsJson[i].updated_at
                 var files = gistsJson[i].files
                 for (var f in files)
                 {
-                    gistsList.append( { description: description,
-                                        html_url: html_url,
-                                        created_at: created_at,
-                                        updated_at: updated_at,
+                    gistsList.append( { gist_id: gistsJson[i].id,
+                                        description: gistsJson[i].description,
+                                        html_url: gistsJson[i].html_url,
+                                        created_at: gistsJson[i].created_at,
+                                        updated_at: gistsJson[i].updated_at,
                                         filename: files[f].filename,
                                         language: files[f].language,
                                         size: files[f].size,
-                                        raw_url: files[f].raw_url } )
+                                        raw_url: files[f].raw_url})
                 }
             }
             processing = false
@@ -89,6 +92,14 @@ ApplicationWindow
     ListModel
     {
         id: gistsList
+    }
+
+    function getBottomPageId()
+    {
+        return pageStack.find( function(page)
+        {
+            return (page._depth === 0)
+        })
     }
 }
 

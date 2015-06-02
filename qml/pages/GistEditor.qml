@@ -7,6 +7,9 @@ Page
 
     property string raw_url: ""
     property string filename: ""
+    property string description: ""
+    property string gist_id: ""
+    property bool newGist: false
     property bool changed: false
 
     function loadRaw()
@@ -30,7 +33,16 @@ Page
 
     Component.onCompleted:
     {
-        loadRaw()
+        if (newGist)
+        {
+            area.readOnly = false
+            area.focus = true
+            filename = "New file"
+        }
+        else
+        {
+            loadRaw()
+        }
     }
 
     SilicaFlickable
@@ -46,6 +58,7 @@ Page
             MenuItem
             {
                 text: area.readOnly ? "Edit" : "Revert changes"
+                enabled: !newGist
                 onClicked:
                 {
                     if (area.readOnly)
@@ -66,6 +79,7 @@ Page
             MenuItem
             {
                 text: "Save to file"
+                enabled: area.text.length > 0
                 onClicked:
                 {
                     var afnd = pageStack.push(Qt.resolvedUrl("AskFilename.qml"), { filename: filename })
@@ -81,13 +95,45 @@ Page
             MenuItem
             {
                 text: "Copy to clipboard"
+                enabled: area.text.length > 0
                 onClicked: Clipboard.text = area.text
             }
             MenuItem
             {
-                text: "Upload to github"
-                enabled: changed
-                onClicked: messagebox.showError("sure, not yet")
+                text: newGist ? "Upload to github" : "Update on github"
+                enabled: (!newGist || changed) && area.text.length > 0
+                onClicked:
+                {
+                    var gd = pageStack.push(Qt.resolvedUrl("AskGistDetails.qml"),
+                                            {
+                                                newGist: newGist,
+                                                description: description,
+                                                filename: filename
+                                            })
+
+                    gd.accepted.connect(function()
+                    {
+                        processing = true
+                        var jsonvar = {}
+                        var jsonvarfiles = {}
+                        if (newGist)
+                        {
+                            jsonvarfiles[gd.filename] = { "content": area.text }
+                            jsonvar["description"] = gd.description
+                            jsonvar["public"] = true
+                            jsonvar["files"] = jsonvarfiles
+                            gists.postGist(JSON.stringify(jsonvar))
+                        }
+                        else
+                        {
+                            jsonvarfiles[filename] = { "filename": gd.filename, "content": area.text }
+                            jsonvar["description"] = gd.description
+                            jsonvar["files"] = jsonvarfiles
+                            gists.updateGist(gist_id, JSON.stringify(jsonvar))
+                        }
+                        pageStack.pop(getBottomPageId())
+                    })
+                }
             }
         }
 

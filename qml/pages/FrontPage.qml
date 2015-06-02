@@ -30,6 +30,20 @@ Page
                 }
                 onClicked: pageStack.push(Qt.resolvedUrl("LoginPage.qml"))
             }
+            MenuItem
+            {
+                text: "Refresh"
+                onClicked:
+                {
+                    processing = true
+                    gists.fetchGists()
+                }
+            }
+            MenuItem
+            {
+                text: "New Gist"
+                onClicked: pageStack.push(Qt.resolvedUrl("GistEditor.qml"), { newGist: true } )
+            }
         }
 
         SilicaListView
@@ -46,25 +60,43 @@ Page
             delegate: ListItem
             {
                 id: listItem
+                function remove()
+                {
+                    remorseAction("Deleting", function()
+                    {
+                        processing = true
+                        var jsonvar = {}
+                        var jsonvarfiles = {}
+                        jsonvarfiles[filename] = null
+                        jsonvar["files"] = jsonvarfiles
+                        gists.updateGist(gist_id, JSON.stringify(jsonvar))
+                    })
+                }
                 menu: ContextMenu
                 {
                     MenuItem
                     {
                         text: "Open in browser"
-
                         onClicked:
                         {
                             openingBrowser = true
                             Qt.openUrlExternally(html_url)
                         }
                     }
+                    MenuItem
+                    {
+                        text: "Delete"
+                        onClicked: remove()
+                    }
                 }
 
                 onClicked:
                 {
-                    pageStack.push(Qt.resolvedUrl("ShowGist.qml"),
+                    pageStack.push(Qt.resolvedUrl("GistEditor.qml"),
                                    {
+                                       gist_id: gist_id,
                                        raw_url: raw_url,
+                                       description: description,
                                        filename: filename
                                    } )
                     pageStack.pushAttached(Qt.resolvedUrl("GistInfo.qml"), { thisGist: listView.model.get(index) } )

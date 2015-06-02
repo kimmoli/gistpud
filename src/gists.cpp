@@ -109,6 +109,53 @@ void Gists::fetchGists()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(errorReply(QNetworkReply::NetworkError)));
 }
 
+void Gists::postGist(QString json)
+{
+    QUrl url(_apiUrl + GH_GISTS);
+
+    QNetworkRequest req(url);
+
+    QByteArray postData = json.toLocal8Bit();
+
+    req.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    req.setHeader(QNetworkRequest::ContentLengthHeader, QString::number(postData.size()));
+
+    QString concatenated = _username + ":" + (_basicAuth ? _password : _token);
+    QByteArray data = concatenated.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    req.setRawHeader("Authorization", headerData.toLocal8Bit());
+
+    req.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
+
+    QNetworkReply *reply = _manager->post(req, postData);
+
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(errorReply(QNetworkReply::NetworkError)));
+}
+
+void Gists::updateGist(QString id, QString json)
+{
+    QUrl url(_apiUrl + GH_GISTS + "/" + id);
+
+    QNetworkRequest req(url);
+
+    QByteArray postData = json.toLocal8Bit();
+
+    req.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    req.setHeader(QNetworkRequest::ContentLengthHeader, QString::number(postData.size()));
+
+    QString concatenated = _username + ":" + (_basicAuth ? _password : _token);
+    QByteArray data = concatenated.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    req.setRawHeader("Authorization", headerData.toLocal8Bit());
+
+    req.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
+
+    QNetworkReply *reply = _manager->post(req, postData);
+
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(errorReply(QNetworkReply::NetworkError)));
+}
+
+
 /*****************/
 
 void Gists::finished(QNetworkReply *reply)
@@ -117,18 +164,31 @@ void Gists::finished(QNetworkReply *reply)
     QString rAll(reply->readAll());
     reply->deleteLater();
 
-    qDebug() << referringUrl << ">>" << rAll;
-
     if (referringUrl.endsWith(GH_ZEN))
     {
+        qDebug() << "zen:" << rAll;
         _zen = rAll;
         emit zenChanged();
     }
-    if (referringUrl.endsWith(GH_GISTS))
+    else if (referringUrl.endsWith(_username + GH_GISTS))
     {
-        qDebug() << "reply to fetchGists";
+        qDebug() << "reply to fetchGists()";
         _gistsList = rAll;
         emit gistsChanged();
+    }
+    else if (referringUrl.endsWith(GH_GISTS))
+    {
+        qDebug() << "reply to postGist()";
+        emit success();
+    }
+    else if (referringUrl.contains(QString(GH_GISTS) + QString("/")))
+    {
+        qDebug() << "reply to updateGist()";
+        emit success();
+    }
+    else
+    {
+        qDebug() << referringUrl << ">>" << rAll;
     }
 }
 

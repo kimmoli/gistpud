@@ -53,9 +53,12 @@ public:
     QString zen() { return _zen; }
     bool loggedIn() { return _username.length() > 0; }
     QString username() { return _username; }
+    QString gistHtmlUrl() { return _gistHtmlUrl; }
 
     Q_INVOKABLE QString getGists() { return _gistsList; }
     Q_INVOKABLE QString getError() { return _error; }
+
+    QString parseHtmlUrl(QString jsonReply);
 
 signals:
     void zenChanged();
@@ -80,6 +83,7 @@ private:
 
     QString _zen;
     QString _gistsList;
+    QString _gistHtmlUrl;
 
     QString _error;
 

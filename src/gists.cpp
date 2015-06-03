@@ -179,7 +179,15 @@ void Gists::finished(QNetworkReply *reply)
     else if (referringUrl.endsWith(GH_GISTS))
     {
         qDebug() << "reply to postGist()";
-        emit success();
+        _gistHtmlUrl = parseHtmlUrl(rAll);
+        if (_gistHtmlUrl.isEmpty())
+        {
+            emit error();
+        }
+        else
+        {
+            emit success();
+        }
     }
     else if (referringUrl.contains(QString(GH_GISTS) + QString("/")))
     {
@@ -198,6 +206,26 @@ void Gists::errorReply(QNetworkReply::NetworkError networkError)
     qCritical() << networkError << _error;
 
     emit error();
+}
+
+/******************************/
+
+QString Gists::parseHtmlUrl(QString jsonReply)
+{
+    QJsonParseError jerror;
+
+    QJsonDocument jdoc = QJsonDocument::fromJson(jsonReply.toUtf8(), &jerror);
+
+    if(jerror.error != QJsonParseError::NoError)
+    {
+        _error = jerror.errorString();
+        printf("Json parse error %s\n", qPrintable(_error));
+        return QString();
+    }
+
+    QJsonObject jobj = jdoc.object();
+
+    return jobj["html_url"].toString();
 }
 
 /******************************/

@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     printf("GistPud version %s (C) kimmoli 2015\n\n", APPVERSION);
     printf("To use this from console, login through GUI, and start\n");
-    printf("  harbour-gistpud - {title}\n");
+    printf("  harbour-gistpud - {gist-filename}\n");
     printf("to create a Gist from stdin.\n\n");
 
     qmlRegisterType<Gists>("harbour.gistpud.Gists", 1, 0, "Gists");

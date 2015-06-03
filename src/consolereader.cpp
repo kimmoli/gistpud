@@ -44,7 +44,7 @@ void consolereader::error()
 
 void consolereader::success()
 {
-    printf("Success\n");
+    printf("Success, URL:\n%s\n", qPrintable(gists->gistHtmlUrl()));
 
     QDBusMessage m = QDBusMessage::createMethodCall("com.kimmoli.gistpud",
                                                     "/",

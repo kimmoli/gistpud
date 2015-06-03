@@ -41,6 +41,7 @@ ApplicationWindow
 
         onSuccess:
         {
+            messagebox.showMessage("Success")
             processing = true
             gists.fetchGists()
         }

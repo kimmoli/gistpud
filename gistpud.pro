@@ -11,7 +11,7 @@ CONFIG += sailfishapp
 DEFINES += "APPVERSION=\\\"$${SPECVERSION}\\\""
 
 SECRET = $$system(cat cryptokey)
-DEFINES += "SECRET=\\\"0x$${SECRET}\\\""
+DEFINES += "SECRET=0x$${SECRET}"
 
 message($${DEFINES})
 
@@ -36,4 +36,5 @@ OTHER_FILES += qml/gistpud.qml \
     qml/pages/LoginPage.qml \
     qml/pages/AskFilename.qml \
     qml/pages/AskGistDetails.qml \
-    qml/pages/GistEditor.qml
+    qml/pages/GistEditor.qml \
+    qml/components/GitHub-Mark-Light-120px-plus.png

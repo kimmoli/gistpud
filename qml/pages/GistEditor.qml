@@ -163,6 +163,10 @@ Page
                 width: showGistPage.width
                 height: Math.max(showGistPage.height - dh.height, implicitHeight)
 
+                wrapMode: Text.WrapAnywhere
+                font.pixelSize: Theme.fontSizeTiny
+                font.family: "Monospace"
+
                 selectionMode: TextEdit.SelectCharacters
                 readOnly: true
                 background: null

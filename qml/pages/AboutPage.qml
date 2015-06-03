@@ -73,16 +73,31 @@ Page
             }
             Item
             {
-                height: 100
+                height: 70
                 width: 1
             }
-//            Label
-//            {
-//                anchors.horizontalCenter: parent.horizontalCenter
-//                text: "To paste from commandline use:<br><b>harbour-kladi - {title} {expire}</b>"
-//                textFormat: Text.RichText
-//                horizontalAlignment: Text.AlignHCenter
-//            }
+            Label
+            {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "To paste from commandline use:<br><b>harbour-gistpud - {gist-filename}</b>"
+                textFormat: Text.RichText
+                horizontalAlignment: Text.AlignHCenter
+            }
+            Item
+            {
+                height: 70
+                width: 1
+            }
+            Image
+            {
+                source: "../components/GitHub-Mark-Light-120px-plus.png"
+                anchors.horizontalCenter: parent.horizontalCenter
+                MouseArea
+                {
+                    anchors.fill: parent
+                    onClicked: Qt.openUrlExternally("https://github.com")
+                }
+            }
         }
     }
 }

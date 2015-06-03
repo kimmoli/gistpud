@@ -10,14 +10,19 @@ CONFIG += sailfishapp
 
 DEFINES += "APPVERSION=\\\"$${SPECVERSION}\\\""
 
+SECRET = $$system(cat cryptokey)
+DEFINES += "SECRET=\\\"0x$${SECRET}\\\""
+
 message($${DEFINES})
 
 SOURCES += src/gistpud.cpp \
 	src/gists.cpp \
-    src/consolereader.cpp
+    src/consolereader.cpp \
+    src/simplecrypt.cpp
 	
 HEADERS += src/gists.h \
-    src/consolereader.h
+    src/consolereader.h \
+    src/simplecrypt.h
 
 OTHER_FILES += qml/gistpud.qml \
     qml/cover/CoverPage.qml \

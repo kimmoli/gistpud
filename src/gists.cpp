@@ -4,6 +4,7 @@
 
 #include "gists.h"
 #include <QtQml>
+#include "simplecrypt.h"
 
 Gists::Gists(QObject *parent) :
     QObject(parent)
@@ -32,9 +33,10 @@ Gists::~Gists()
 
 QVariant Gists::getSetting(QString name, QVariant defaultValue)
 {
+    SimpleCrypt crypto(QString(SECRET).toULongLong(0, 16));
     QSettings s("/home/nemo/.config/harbour-gistpud/harbour-gistpud.conf", QSettings::NativeFormat);
     s.beginGroup("Settings");
-    QVariant settingValue = s.value(name, defaultValue);
+    QVariant settingValue = QVariant(crypto.decryptToString(s.value(name, defaultValue).toString()));
     s.endGroup();
 
     return settingValue;
@@ -42,9 +44,10 @@ QVariant Gists::getSetting(QString name, QVariant defaultValue)
 
 void Gists::setSetting(QString name, QVariant value)
 {
+    SimpleCrypt crypto(QString(SECRET).toULongLong(0, 16));
     QSettings s("harbour-gistpud", "harbour-gistpud");
     s.beginGroup("Settings");
-    s.setValue(name, value);
+    s.setValue(name, crypto.encryptToString(value.toString()));
     s.endGroup();
 }
 

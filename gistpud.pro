@@ -18,11 +18,13 @@ message($${DEFINES})
 SOURCES += src/gistpud.cpp \
 	src/gists.cpp \
     src/consolereader.cpp \
-    src/simplecrypt.cpp
+    src/simplecrypt.cpp \
+    src/highlighter.cpp
 	
 HEADERS += src/gists.h \
     src/consolereader.h \
-    src/simplecrypt.h
+    src/simplecrypt.h \
+    src/highlighter.h
 
 OTHER_FILES += qml/gistpud.qml \
     qml/cover/CoverPage.qml \

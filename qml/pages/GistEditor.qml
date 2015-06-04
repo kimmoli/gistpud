@@ -8,6 +8,7 @@ Page
     property string raw_url: ""
     property string filename: ""
     property string description: ""
+    property string language: ""
     property string gist_id: ""
     property bool newGist: false
     property bool changed: false
@@ -171,6 +172,12 @@ Page
                 readOnly: true
                 background: null
                 onTextChanged: if (!readOnly) changed = true
+
+                Component.onCompleted:
+                {
+                    if (language == "QML")
+                        gists.highLightTarget = area._editor
+                }
             }
         }
     }

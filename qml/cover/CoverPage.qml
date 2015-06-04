@@ -11,6 +11,7 @@ CoverBackground
     {
         text: "GistPud"
         icon.source: "/usr/share/icons/hicolor/86x86/apps/harbour-gistpud.png"
+        icon.opacity: 0.6
     }
 }
 

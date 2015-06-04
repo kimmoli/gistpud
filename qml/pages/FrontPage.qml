@@ -97,7 +97,8 @@ Page
                                        gist_id: gist_id,
                                        raw_url: raw_url,
                                        description: description,
-                                       filename: filename
+                                       filename: filename,
+                                       language: language
                                    } )
                     pageStack.pushAttached(Qt.resolvedUrl("GistInfo.qml"), { thisGist: listView.model.get(index) } )
                 }

@@ -9,6 +9,21 @@
 Gists::Gists(QObject *parent) :
     QObject(parent)
 {
+
+    initUser();
+
+    _apiUrl = "https://api.github.com";
+    _manager = new QNetworkAccessManager(this);
+
+    connect(_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finished(QNetworkReply*)));
+}
+
+Gists::~Gists()
+{
+}
+
+void Gists::initUser()
+{
     _username = getSetting("username", QString()).toString();
     if (getSetting("logintype", "basic").toString() == "basic")
     {
@@ -20,15 +35,6 @@ Gists::Gists(QObject *parent) :
         _basicAuth = false;
         _token = getSetting("token", "").toString();
     }
-
-    _apiUrl = "https://api.github.com";
-    _manager = new QNetworkAccessManager(this);
-
-    connect(_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finished(QNetworkReply*)));
-}
-
-Gists::~Gists()
-{
 }
 
 QVariant Gists::getSetting(QString name, QVariant defaultValue)
@@ -265,4 +271,28 @@ void Gists::registerToDBus()
 {
      QDBusConnection::sessionBus().registerService(SERVICE_NAME);
      QDBusConnection::sessionBus().registerObject("/", this, QDBusConnection::ExportAllInvokables);
+}
+
+/*****************/
+
+void Gists::setHighLightTarget(QQuickItem *target)
+{
+    _hlDoc = 0;
+    _hl = 0;
+    _hlTarget = target;
+
+    if (!_hlTarget)
+        return;
+
+    QVariant doc = _hlTarget->property("textDocument");
+
+    if (doc.canConvert<QQuickTextDocument*>())
+    {
+        QQuickTextDocument *qqdoc = doc.value<QQuickTextDocument*>();
+        if (qqdoc)
+            _hlDoc = qqdoc->textDocument();
+            _hl = new Highlighter(_hlDoc);
+    }
+
+    emit highLightTargetChanged();
 }

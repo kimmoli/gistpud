@@ -10,7 +10,7 @@ Name:       harbour-gistpud
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Github gist application
 Version:    0.0.4
-Release:    4
+Release:    5
 Group:      Qt/Qt
 License:    LICENSE
 URL:        http://example.org/

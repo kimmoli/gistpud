@@ -13,6 +13,8 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QtDBus/QtDBus>
+#include <QQuickTextDocument>
+#include "highlighter.h"
 
 #define SERVICE_NAME "com.kimmoli.gistpud"
 
@@ -28,6 +30,7 @@ class Gists : public QObject
     Q_PROPERTY(QString zen READ zen NOTIFY zenChanged)
     Q_PROPERTY(bool loggedIn READ loggedIn NOTIFY loggedInChanged)
     Q_PROPERTY(QString username READ username NOTIFY usernameChanged)
+    Q_PROPERTY(QQuickItem *highLightTarget READ highLightTarget WRITE setHighLightTarget NOTIFY highLightTargetChanged)
 
 public:
     explicit Gists(QObject *parent = 0);
@@ -48,6 +51,7 @@ public:
     Q_INVOKABLE bool save(QString filename, QString data);
 
     Q_INVOKABLE void registerToDBus();
+    Q_INVOKABLE void initUser();
 
 
     QString zen() { return _zen; }
@@ -60,6 +64,9 @@ public:
 
     QString parseHtmlUrl(QString jsonReply);
 
+    QQuickItem *highLightTarget() { return _hlTarget; }
+    void setHighLightTarget(QQuickItem *target);
+
 signals:
     void zenChanged();
     void loggedInChanged();
@@ -67,6 +74,7 @@ signals:
     void gistsChanged();
     void error();
     void success();
+    void highLightTargetChanged();
 
 private slots:
     void finished(QNetworkReply *reply);
@@ -86,6 +94,10 @@ private:
     QString _gistHtmlUrl;
 
     QString _error;
+
+    Highlighter *_hl;
+    QQuickItem *_hlTarget;
+    QTextDocument *_hlDoc;
 
 };
 

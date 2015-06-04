@@ -65,6 +65,8 @@ Page
                     onClicked:
                     {
                         gists.loginBasic(uname.text, upass.text)
+                        gists.initUser()
+                        gists.fetchGists()
                         pageStack.navigateBack()
                     }
                 }
@@ -76,6 +78,8 @@ Page
                     onClicked:
                     {
                         gists.loginToken(uname.text, upass.text)
+                        gists.initUser()
+                        gists.fetchGists()
                         pageStack.navigateBack()
                     }
                 }

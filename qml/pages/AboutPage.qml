@@ -73,19 +73,19 @@ Page
             }
             Item
             {
-                height: 70
+                height: 50
                 width: 1
             }
             Label
             {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "To paste from commandline use:<br><b>harbour-gistpud - {gist-filename}</b>"
+                text: "To paste from commandline use:<br><b>harbour-gistpud - {gist-filename}</b><br>To upload text file:<br><b>harbour-gistpud localfilename</b>"
                 textFormat: Text.RichText
                 horizontalAlignment: Text.AlignHCenter
             }
             Item
             {
-                height: 70
+                height: 50
                 width: 1
             }
             Image

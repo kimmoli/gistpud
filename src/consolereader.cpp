@@ -1,19 +1,37 @@
 #include "consolereader.h"
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <QtDBus/QtDBus>
 #include <QtDBus/QDBusArgument>
 
-consolereader::consolereader(QString filename, QObject *parent) :
+consolereader::consolereader(QString readFileName, QString filename, QObject *parent) :
     QObject(parent), running(true), _filename(filename)
 {
+    int f = STDIN_FILENO;
+    if (!readFileName.isEmpty())
+    {
+        f = open(readFileName.toLocal8Bit().constData(),  O_RDONLY);
+        if (f < 0)
+        {
+            printf("Error: Can not open %s\n", qPrintable(readFileName));
+            running = false;
+            return;
+        }
+    }
+
     char ch;
-    while(read(STDIN_FILENO, &ch, 1) > 0)
+    while(read(f, &ch, 1) > 0)
     {
         _buffer.append(ch);
     }
     // loop exits on ctrl-D, EOF
 
     printf("Please wait...\n");
+
+    if (f < 1)
+        close(f);
 
     gists = new Gists();
 

@@ -8,7 +8,7 @@ class consolereader : public QObject
 {
     Q_OBJECT
 public:
-    explicit consolereader(QString filename = "unnamed", QObject *parent = 0);
+    explicit consolereader(QString readFileName, QString filename = "unnamed", QObject *parent = 0);
     ~consolereader();
 
     bool running;

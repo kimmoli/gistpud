@@ -27,6 +27,8 @@ int main(int argc, char *argv[])
         QString readFilename;
         QString filename;
 
+        QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+
         if (QString(argv[1]) != "-")
         {
             readFilename = QString(argv[1]);

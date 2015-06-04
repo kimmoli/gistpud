@@ -28,8 +28,6 @@ consolereader::consolereader(QString readFileName, QString filename, QObject *pa
     }
     // loop exits on ctrl-D, EOF
 
-    printf("Please wait...\n");
-
     if (f < 1)
         close(f);
 
@@ -50,7 +48,6 @@ consolereader::consolereader(QString readFileName, QString filename, QObject *pa
 
     QJsonDocument json(jsonvar);
 
-    // printf("%s\n", qPrintable(QString(json.toJson())));
     gists->postGist(QString(json.toJson()));
 }
 

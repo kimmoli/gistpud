@@ -22,7 +22,7 @@ public slots:
 
 public:
     QString _filename;
-    QByteArray _buffer;
+    QString _buffer;
     Gists *gists;
 
 };

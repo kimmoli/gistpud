@@ -40,4 +40,5 @@ OTHER_FILES += qml/gistpud.qml \
     qml/pages/AskGistDetails.qml \
     qml/pages/GistEditor.qml \
     qml/components/GitHub-Mark-Light-120px-plus.png \
-    qml/pages/GistPreview.qml
+    qml/pages/GistPreview.qml \
+    qml/pages/ImageViewer.qml

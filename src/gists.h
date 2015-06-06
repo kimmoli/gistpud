@@ -46,6 +46,7 @@ public:
     Q_INVOKABLE void fetchGists();
     Q_INVOKABLE void postGist(QString json);
     Q_INVOKABLE void updateGist(QString id, QString json);
+    Q_INVOKABLE void deleteGist(QString id);
 
     Q_INVOKABLE bool fileExists(QString filename);
     Q_INVOKABLE bool save(QString filename, QString data);

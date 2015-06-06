@@ -267,6 +267,35 @@ bool Gists::save(QString filename, QString data)
     return true;
 }
 
+QString Gists::saveTemp(QString data)
+{
+    /* Delete old temp files */
+    QString path = "/tmp";
+    QDir dir(path);
+
+    dir.setNameFilters(QStringList() << "gistpud-*.qml");
+    dir.setFilter(QDir::Files);
+
+    foreach(QString dirFile, dir.entryList())
+    {
+        dir.remove(dirFile);
+    }
+
+    /* and create a new with new filename */
+    QString filepath = QString("/tmp/gistpud-%1.qml")
+            .arg((qlonglong)QDateTime::currentMSecsSinceEpoch(), (int)8, (int)16, QChar('0'));
+
+    QFile f(filepath);
+
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+        return QString();
+
+    f.write(data.toLocal8Bit());
+    f.close();
+
+    return filepath;
+}
+
 void Gists::registerToDBus()
 {
      QDBusConnection::sessionBus().registerService(SERVICE_NAME);

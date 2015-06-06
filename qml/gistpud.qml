@@ -13,6 +13,8 @@ ApplicationWindow
     id: gistpud
 
     onApplicationActiveChanged: openingBrowser = false
+    allowedOrientations: Orientation.All
+    _defaultPageOrientations: Orientation.All
 
     initialPage: Qt.resolvedUrl("pages/FrontPage.qml")
     cover: Qt.resolvedUrl("cover/CoverPage.qml")

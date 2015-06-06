@@ -49,7 +49,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     QStringList keywordPatterns;
     keywordPatterns << "\\bimport\\b" << "\\bfunction\\b" << "\\bproperty\\b"
                     << "\\bvar\\b" << "\\bif\\b" << "\\belse\\b" << "\\bstring\\b"
-                    << "\\bbool\\b" << "\\bnew\\b" << "\\bin\\b";
+                    << "\\bbool\\b" << "\\bnew\\b" << "\\bin\\b" << "\\balias\\b";
     foreach (const QString &pattern, keywordPatterns)
     {
         rule.pattern = QRegExp(pattern);

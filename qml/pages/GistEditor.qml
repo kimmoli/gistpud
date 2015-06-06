@@ -95,12 +95,6 @@ Page
             }
             MenuItem
             {
-                text: "Copy to clipboard"
-                enabled: area.text.length > 0
-                onClicked: Clipboard.text = area.text
-            }
-            MenuItem
-            {
                 text: newGist ? "Upload to github" : "Update on github"
                 enabled: (!newGist || changed) && area.text.length > 0
                 onClicked:
@@ -134,6 +128,49 @@ Page
                         }
                         pageStack.pop(getBottomPageId())
                     })
+                }
+            }
+            MenuItem
+            {
+                text: "Preview"
+                enabled: language === "QML"
+                visible: enabled
+                onClicked:
+                {
+                    var dlg
+                    var qmlCode = ""
+                    var pattern = /QtQuick 2/;
+                    if (!pattern.test(area.text))
+                        qmlCode += "import QtQuick 2.0\n"
+                    pattern = /Sailfish\.Silica/;
+                    if (!pattern.test(area.text))
+                        qmlCode += "import Sailfish.Silica 1.0\n"
+                    qmlCode += area.text
+
+                    var tempFilename = gists.saveTemp(qmlCode)
+
+                    var patternP = /\bPage\b/
+                    var patternD = /\bDialog\b/
+                    if (patternP.test(area.text))
+                    {
+                        pageStack.push(Qt.resolvedUrl(tempFilename))
+                    }
+                    else if (patternD.test(area.text))
+                    {
+                        dlg = pageStack.push(Qt.resolvedUrl(tempFilename))
+                        dlg.accepted.connect(function()
+                        {
+                            messagebox.showMessage("Accepted")
+                        })
+                        dlg.rejected.connect(function()
+                        {
+                            messagebox.showMessage("Rejected")
+                        })
+                    }
+                    else
+                    {
+                        pageStack.push(Qt.resolvedUrl("GistPreview.qml"), { filename: tempFilename })
+                    }
                 }
             }
         }
@@ -172,6 +209,7 @@ Page
                 readOnly: true
                 background: null
                 onTextChanged: if (!readOnly) changed = true
+                onReadOnlyChanged: cursorPosition = 0
 
                 Component.onCompleted:
                 {
@@ -180,5 +218,6 @@ Page
                 }
             }
         }
+
     }
 }

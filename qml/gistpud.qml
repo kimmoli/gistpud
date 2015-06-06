@@ -53,12 +53,17 @@ ApplicationWindow
             gistsList.clear()
 
             var gistsJson = JSON.parse(gists.getGists())
-
+            var gistno = 0
             for (var i in gistsJson)
             {
                 var files = gistsJson[i].files
+                var fileno = 0
+                var nof = 0
+                for (var f in files)
+                    nof++
                 for (var f in files)
                 {
+                    console.log(gistno + " " + fileno + " " + " " + nof + " " +gistsJson[i].description + " " + files[f].filename)
                     gistsList.append( { gist_id: gistsJson[i].id,
                                         description: gistsJson[i].description,
                                         html_url: gistsJson[i].html_url,
@@ -67,8 +72,31 @@ ApplicationWindow
                                         filename: files[f].filename,
                                         language: files[f].language,
                                         size: files[f].size,
-                                        raw_url: files[f].raw_url})
+                                        raw_url: files[f].raw_url,
+                                        type: files[f].type,
+                                        fileno: fileno,
+                                        gistno: gistno,
+                                        filesInThisGist: nof
+                                        } )
+                    fileno++
                 }
+                if (fileno == 0)
+                {
+                    gistsList.append( { gist_id: gistsJson[i].id,
+                                        description: gistsJson[i].description,
+                                        html_url: gistsJson[i].html_url,
+                                        created_at: gistsJson[i].created_at,
+                                        updated_at: gistsJson[i].updated_at,
+                                        filename: "empty gist",
+                                        language: "",
+                                        size: 0,
+                                        raw_url: "",
+                                        fileno: fileno,
+                                        gistno: gistno,
+                                        filesInThisGist: 0
+                                        } )
+                }
+                gistno++
             }
             processing = false
         }

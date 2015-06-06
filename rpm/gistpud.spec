@@ -9,11 +9,11 @@ Name:       harbour-gistpud
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Github gist application
-Version:    0.0.5
-Release:    6
+Version:    0.0.6
+Release:    8
 Group:      Qt/Qt
 License:    LICENSE
-URL:        http://example.org/
+URL:        https://github.com/kimmoli/gistpud
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   qt5-qtdeclarative-import-xmllistmodel

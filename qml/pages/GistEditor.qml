@@ -11,6 +11,7 @@ Page
     property string language: ""
     property string gist_id: ""
     property bool newGist: false
+    property bool addFileToGist: false
     property bool changed: false
 
     function loadRaw()
@@ -40,6 +41,12 @@ Page
             area.focus = true
             filename = "New file"
         }
+        else if (addFileToGist)
+        {
+            area.readOnly = false
+            area.focus = true
+            filename = "New file"
+        }
         else
         {
             loadRaw()
@@ -59,7 +66,7 @@ Page
             MenuItem
             {
                 text: area.readOnly ? "Edit" : "Revert changes"
-                enabled: !newGist
+                enabled: !newGist && !addFileToGist
                 onClicked:
                 {
                     if (area.readOnly)
@@ -95,13 +102,13 @@ Page
             }
             MenuItem
             {
-                text: newGist ? "Upload to github" : "Update on github"
-                enabled: (!newGist || changed) && area.text.length > 0
+                text: (newGist||addFileToGist) ? "Upload to github" : "Update on github"
+                enabled: ((!newGist && !addFileToGist) || changed) && area.text.length > 0
                 onClicked:
                 {
                     var gd = pageStack.push(Qt.resolvedUrl("AskGistDetails.qml"),
                                             {
-                                                newGist: newGist,
+                                                newGist: newGist || addFileToGist,
                                                 description: description,
                                                 filename: filename
                                             })
@@ -121,7 +128,10 @@ Page
                         }
                         else
                         {
-                            jsonvarfiles[filename] = { "filename": gd.filename, "content": area.text }
+                            if (addFileToGist)
+                                jsonvarfiles[gd.filename] = { "content": area.text }
+                            else
+                                jsonvarfiles[filename] = { "filename": gd.filename, "content": area.text }
                             jsonvar["description"] = gd.description
                             jsonvar["files"] = jsonvarfiles
                             gists.updateGist(gist_id, JSON.stringify(jsonvar))

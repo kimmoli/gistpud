@@ -164,6 +164,24 @@ void Gists::updateGist(QString id, QString json)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(errorReply(QNetworkReply::NetworkError)));
 }
 
+void Gists::deleteGist(QString id)
+{
+    QUrl url(_apiUrl + GH_GISTS + "/" + id);
+
+    QNetworkRequest req(url);
+
+    QString concatenated = _username + ":" + (_basicAuth ? _password : _token);
+    QByteArray data = concatenated.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    req.setRawHeader("Authorization", headerData.toLocal8Bit());
+
+    req.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
+
+    QNetworkReply *reply = _manager->deleteResource(req);
+
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(errorReply(QNetworkReply::NetworkError)));
+}
+
 
 /*****************/
 

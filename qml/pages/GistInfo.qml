@@ -51,6 +51,11 @@ Page
                 label: "Size"
                 value: thisGist.size + " B"
             }
+            DetailItem
+            {
+                label: "Type"
+                value: thisGist.type
+            }
         }
     }
 }

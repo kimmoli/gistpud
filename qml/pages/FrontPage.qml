@@ -12,6 +12,7 @@ Page
     SilicaFlickable
     {
         anchors.fill: parent
+        clip: true
 
         PullDownMenu
         {
@@ -65,15 +66,36 @@ Page
                     remorseAction("Deleting", function()
                     {
                         processing = true
-                        var jsonvar = {}
-                        var jsonvarfiles = {}
-                        jsonvarfiles[filename] = null
-                        jsonvar["files"] = jsonvarfiles
-                        gists.updateGist(gist_id, JSON.stringify(jsonvar))
+                        if (filesInThisGist > 1)
+                        {
+                            var jsonvar = {}
+                            var jsonvarfiles = {}
+                            jsonvarfiles[filename] = null
+                            jsonvar["files"] = jsonvarfiles
+                            gists.updateGist(gist_id, JSON.stringify(jsonvar))
+                        }
+                        else
+                        {
+                            gists.deleteGist(gist_id)
+                        }
                     })
                 }
                 menu: ContextMenu
                 {
+                    MenuItem
+                    {
+                        text: "Add file to this Gist"
+                        onClicked:
+                        {
+                            pageStack.push(Qt.resolvedUrl("GistEditor.qml"),
+                                           {
+                                               gist_id: gist_id,
+                                               raw_url: "",
+                                               description: description,
+                                               addFileToGist: true
+                                           } )
+                        }
+                    }
                     MenuItem
                     {
                         text: "Open in browser"
@@ -92,7 +114,9 @@ Page
 
                 onClicked:
                 {
-                    pageStack.push(Qt.resolvedUrl("GistEditor.qml"),
+                    if (/^text/.test(type))
+                    {
+                        pageStack.push(Qt.resolvedUrl("GistEditor.qml"),
                                    {
                                        gist_id: gist_id,
                                        raw_url: raw_url,
@@ -100,13 +124,28 @@ Page
                                        filename: filename,
                                        language: language
                                    } )
+                    }
+                    else if (/^image/.test(type))
+                    {
+                        pageStack.push(Qt.resolvedUrl("ImageViewer.qml"),
+                                   {
+                                       raw_url: raw_url,
+                                       filename: filename
+                                   } )
+                    }
+
                     pageStack.pushAttached(Qt.resolvedUrl("GistInfo.qml"), { thisGist: listView.model.get(index) } )
                 }
-
+                Rectangle
+                {
+                    anchors.fill: parent
+                    opacity: 0.2
+                    color: (gistno % 2 == 1) ? Theme.highlightColor : "transparent"
+                }
                 Column
                 {
                     id: itemCol
-                    x: Theme.paddingSmall
+                    x: Theme.paddingMedium
 
                     Label
                     {
@@ -115,8 +154,9 @@ Page
                     }
                     Label
                     {
-                        text: Qt.formatDateTime(new Date(updated_at))
+                        text: Qt.formatDateTime(new Date(updated_at)) + "    <i>" + language + "</i> "
                         font.pixelSize: Theme.fontSizeExtraSmall
+                        textFormat: Text.RichText
                         color: listItem.highlighted ? Theme.highlightColor : Theme.secondaryColor
                     }
                 }

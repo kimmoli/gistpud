@@ -5,31 +5,39 @@
 #include <fcntl.h>
 #include <QtDBus/QtDBus>
 #include <QtDBus/QDBusArgument>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 consolereader::consolereader(QString readFileName, QString filename, QObject *parent) :
     QObject(parent), running(true), _filename(filename)
 {
-    int f = STDIN_FILENO;
+    QString mimeType = "text/plain";
+
     if (!readFileName.isEmpty())
     {
-        f = open(readFileName.toLocal8Bit().constData(),  O_RDONLY);
-        if (f < 0)
+        QMimeDatabase db;
+        QMimeType mt = db.mimeTypeForFile(readFileName);
+        mimeType = mt.name();
+
+        QFile f(readFileName);
+        if (!f.open(QIODevice::ReadOnly))
         {
             printf("Error: Can not open %s\n", qPrintable(readFileName));
             running = false;
             return;
         }
+        _buffer = f.readAll();
+        f.close();
     }
-
-    char ch;
-    while(read(f, &ch, 1) > 0)
+    else
     {
-        _buffer.append(ch);
+        char ch;
+        while(read(STDIN_FILENO, &ch, 1) > 0)
+        {
+            _buffer.append(ch);
+        }
+        // loop exits on ctrl-D, EOF
     }
-    // loop exits on ctrl-D, EOF
-
-    if (f < 1)
-        close(f);
 
     gists = new Gists();
 
@@ -43,6 +51,7 @@ consolereader::consolereader(QString readFileName, QString filename, QObject *pa
     jsonvar["description"] = QString("Pasted from Jolla");
     jsonvar["public"] = bool(true);
     jsonvarcontent["content"] = QString(_buffer);
+    jsonvarcontent["type"] = QString(mimeType);
     jsonvarfiles[_filename] = QJsonObject(jsonvarcontent);
     jsonvar["files"] = QJsonObject(jsonvarfiles);
 

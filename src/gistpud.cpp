@@ -17,6 +17,7 @@
 #include <QCoreApplication>
 #include "gists.h"
 #include "consolereader.h"
+#include "filemodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -59,6 +60,7 @@ int main(int argc, char *argv[])
     printf("to upload local text file as a Gist.\n\n");
 
     qmlRegisterType<Gists>("harbour.gistpud.Gists", 1, 0, "Gists");
+    qmlRegisterType<FileModel>("harbour.gistpud.FileModel", 1, 0, "FileModel");
 
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     QScopedPointer<QQuickView> view(SailfishApp::createView());

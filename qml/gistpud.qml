@@ -22,6 +22,8 @@ ApplicationWindow
     property bool processing: false
     property bool openingBrowser: false
 
+    property string lastLocation: StandardPaths.documents
+
     property var github
 
     Gists

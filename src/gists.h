@@ -51,6 +51,7 @@ public:
     Q_INVOKABLE bool fileExists(QString filename);
     Q_INVOKABLE bool save(QString filename, QString data);
     Q_INVOKABLE QString saveTemp(QString data);
+    Q_INVOKABLE QString loadFile(QString filename);
 
     Q_INVOKABLE void registerToDBus();
     Q_INVOKABLE void initUser();

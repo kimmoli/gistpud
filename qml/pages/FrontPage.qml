@@ -40,9 +40,10 @@ Page
                     gists.fetchGists()
                 }
             }
+
             MenuItem
             {
-                text: "New Gist"
+                text: "Compose new Gist"
                 onClicked: pageStack.push(Qt.resolvedUrl("GistEditor.qml"), { newGist: true } )
             }
         }

@@ -106,6 +106,33 @@ Page
             }
             MenuItem
             {
+                text: "Load from file"
+                visible: newGist || addFileToGist
+                enabled: visible
+
+                onClicked:
+                {
+                    var ofp = pageStack.push(Qt.resolvedUrl("OpenFile.qml"))
+                    ofp.fileselected.connect(function()
+                    {
+                        var s = ofp.openFilename.split("/")
+                        filename = s[s.length-1]
+                        if (/\.qml$/i.test(filename))
+                        {
+                            language = "QML"
+                            gists.highLightTarget = area._editor
+                        }
+                        else
+                        {
+                            language = ""
+                            gists.highLightTarget = null
+                        }
+                        area.text = gists.loadFile(ofp.openFilename)
+                    })
+                }
+            }
+            MenuItem
+            {
                 text: (newGist||addFileToGist) ? "Upload to github" : "Update on github"
                 enabled: ((!newGist && !addFileToGist) || changed) && area.text.length > 0
                 onClicked:
@@ -187,6 +214,7 @@ Page
                     }
                 }
             }
+
         }
 
         Column

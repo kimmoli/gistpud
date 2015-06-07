@@ -16,6 +16,9 @@ Gists::Gists(QObject *parent) :
     _manager = new QNetworkAccessManager(this);
 
     connect(_manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(finished(QNetworkReply*)));
+
+    _hl = 0;
+    _hlDoc = 0;
 }
 
 Gists::~Gists()
@@ -314,6 +317,20 @@ QString Gists::saveTemp(QString data)
     return filepath;
 }
 
+QString Gists::loadFile(QString filename)
+{
+    QFile f(filename);
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
+        return QString();
+
+    QString temp(QString::fromLocal8Bit(f.readAll()));
+    f.close();
+
+    return temp;
+}
+
+/*******************/
+
 void Gists::registerToDBus()
 {
      QDBusConnection::sessionBus().registerService(SERVICE_NAME);
@@ -324,8 +341,12 @@ void Gists::registerToDBus()
 
 void Gists::setHighLightTarget(QQuickItem *target)
 {
+    if (_hl)
+        delete _hl;
+
     _hlDoc = 0;
     _hl = 0;
+
     _hlTarget = target;
 
     if (!_hlTarget)

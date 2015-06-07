@@ -114,7 +114,15 @@ Page
 
                 onClicked:
                 {
-                    if (/^text/.test(type))
+                    if (/^image/.test(type))
+                    {
+                        pageStack.push(Qt.resolvedUrl("ImageViewer.qml"),
+                                   {
+                                       raw_url: raw_url,
+                                       filename: filename
+                                   } )
+                    }
+                    else
                     {
                         pageStack.push(Qt.resolvedUrl("GistEditor.qml"),
                                    {
@@ -123,14 +131,6 @@ Page
                                        description: description,
                                        filename: filename,
                                        language: language
-                                   } )
-                    }
-                    else if (/^image/.test(type))
-                    {
-                        pageStack.push(Qt.resolvedUrl("ImageViewer.qml"),
-                                   {
-                                       raw_url: raw_url,
-                                       filename: filename
                                    } )
                     }
 

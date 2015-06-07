@@ -18,6 +18,42 @@
 #include "gists.h"
 #include "consolereader.h"
 #include "filemodel.h"
+#include "messagehandler.h"
+#include <QtGlobal>
+
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    QString message;
+
+    switch (type)
+    {
+    case QtDebugMsg:
+        message = QString("[D] %2 %4:%3 %1").arg(localMsg.data()).arg(context.file).arg(context.line).arg(context.function);
+        break;
+    case QtWarningMsg:
+        message = QString("[W] %2 %4:%3 %1").arg(localMsg.data()).arg(context.file).arg(context.line).arg(context.function);
+        break;
+    case QtCriticalMsg:
+        message = QString("[C] %2 %4:%3 %1").arg(localMsg.data()).arg(context.file).arg(context.line).arg(context.function);
+        break;
+    case QtFatalMsg:
+        message = QString("[F] %2 %4:%3 %1").arg(localMsg.data()).arg(context.file).arg(context.line).arg(context.function);
+        break;
+    }
+
+    fprintf(stderr, "%s\n", qPrintable(message));
+
+    /* If logfile exists, append there too */
+    QFile f("/tmp/harbour-gistpud-log");
+    if (f.exists())
+    {
+        f.open(QIODevice::WriteOnly | QIODevice::Append);
+        QTextStream ts(&f);
+        ts << message << endl;
+        f.close();
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -61,6 +97,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<Gists>("harbour.gistpud.Gists", 1, 0, "Gists");
     qmlRegisterType<FileModel>("harbour.gistpud.FileModel", 1, 0, "FileModel");
+    qmlRegisterType<MessageHandler>("harbour.gistpud.MessageHandler", 1, 0, "MessageHandler");
 
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     QScopedPointer<QQuickView> view(SailfishApp::createView());
@@ -68,6 +105,8 @@ int main(int argc, char *argv[])
     view->show();
 
     app->setApplicationVersion(APPVERSION);
+
+    qInstallMessageHandler(messageHandler);
 
     return app->exec();
 }

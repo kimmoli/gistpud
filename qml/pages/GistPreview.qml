@@ -10,7 +10,10 @@ Page
     property var previewComp
     property bool errorOccured
 
-    Component.onCompleted: changePreview()
+    Component.onCompleted:
+    {
+        changePreview()
+    }
 
     Label
     {

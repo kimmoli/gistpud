@@ -18,6 +18,8 @@ Page
     backNavigation: !area.focus
     canNavigateForward: !area.focus
 
+    Component.onDestruction: gists.highLightTarget = null
+
     function loadRaw()
     {
         processing = true
@@ -211,10 +213,11 @@ Page
                     else
                     {
                         pageStack.push(Qt.resolvedUrl("GistPreview.qml"), { filename: tempFilename })
+
                     }
+                    pageStack.pushAttached(Qt.resolvedUrl("LogViewer.qml"), { filename: tempFilename })
                 }
             }
-
         }
 
         Column
@@ -256,7 +259,9 @@ Page
                 Component.onCompleted:
                 {
                     if (language == "QML")
+                    {
                         gists.highLightTarget = area._editor
+                    }
                 }
             }
         }

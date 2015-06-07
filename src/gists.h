@@ -101,7 +101,6 @@ private:
     Highlighter *_hl;
     QQuickItem *_hlTarget;
     QTextDocument *_hlDoc;
-
 };
 
 

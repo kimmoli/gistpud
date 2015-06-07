@@ -20,13 +20,15 @@ SOURCES += src/gistpud.cpp \
     src/consolereader.cpp \
     src/simplecrypt.cpp \
     src/highlighter.cpp \
-    src/filemodel.cpp
+    src/filemodel.cpp \
+    src/messagehandler.cpp
 	
 HEADERS += src/gists.h \
     src/consolereader.h \
     src/simplecrypt.h \
     src/highlighter.h \
-    src/filemodel.h
+    src/filemodel.h \
+    src/messagehandler.h
 
 OTHER_FILES += qml/gistpud.qml \
     qml/cover/CoverPage.qml \
@@ -44,4 +46,5 @@ OTHER_FILES += qml/gistpud.qml \
     qml/components/GitHub-Mark-Light-120px-plus.png \
     qml/pages/GistPreview.qml \
     qml/pages/ImageViewer.qml \
-    qml/pages/OpenFile.qml
+    qml/pages/OpenFile.qml \
+    qml/pages/LogViewer.qml

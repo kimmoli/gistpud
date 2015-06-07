@@ -6,6 +6,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import QtQuick.XmlListModel 2.0
 import harbour.gistpud.Gists 1.0
+import harbour.gistpud.MessageHandler 1.0
 import "components"
 
 ApplicationWindow
@@ -65,7 +66,6 @@ ApplicationWindow
                     nof++
                 for (var f in files)
                 {
-                    console.log(gistno + " " + fileno + " " + " " + nof + " " +gistsJson[i].description + " " + files[f].filename)
                     gistsList.append( { gist_id: gistsJson[i].id,
                                         description: gistsJson[i].description,
                                         html_url: gistsJson[i].html_url,
@@ -135,6 +135,13 @@ ApplicationWindow
             return (page._depth === 0)
         })
     }
+
+    MessageHandler
+    {
+        id: messageHandler
+        enable: false
+    }
+
 }
 
 

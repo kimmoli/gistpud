@@ -29,4 +29,11 @@ Page
         anchors.topMargin: Theme.paddingMedium
         text: img.sourceSize.width + "x" + img.sourceSize.height
     }
+    PinchArea
+    {
+        anchors.fill: imageViewerPage
+        pinch.target: img
+        pinch.minimumScale: 0.5
+        pinch.maximumScale: 5.0
+    }
 }

@@ -14,6 +14,10 @@ Page
     property bool addFileToGist: false
     property bool changed: false
 
+    /* Prevent accidental page-navigation when editing */
+    backNavigation: !area.focus
+    canNavigateForward: !area.focus
+
     function loadRaw()
     {
         processing = true
